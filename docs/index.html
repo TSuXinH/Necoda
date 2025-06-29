@@ -3,133 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>我的超棒项目 | 项目主页</title>
+
+    <title>[项目名称] | 项目主页</title>
     <style>
-        /* --- 整体样式 --- */
+        /* --- 全局样式 --- */
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-            line-height: 1.6;
-            background-color: #f8f9fa;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            line-height: 1.8;
             color: #333;
+            background-color: #fff;
             margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            padding: 0;
         }
 
         /* --- 内容容器 --- */
         .container {
-            max-width: 800px;
-            margin: 2em;
-            padding: 2em;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            text-align: center;
+            max-width: 850px;
+            margin: 2em auto;
+            padding: 0 2em;
         }
 
-        /* --- 标题 --- */
+        /* --- 标题和作者信息 --- */
+        header {
+            text-align: center;
+            margin-bottom: 2em;
+        }
         h1 {
-            color: #24292e;
-            font-size: 2.5em;
+            font-size: 2.8em;
+            margin-bottom: 0.2em;
+            color: #000;
+        }
+        .authors {
+            font-size: 1.1em;
             margin-bottom: 0.5em;
         }
-
-        /* --- 副标题/标语 --- */
-        .tagline {
+        .affiliations {
+            font-size: 1em;
+            color: #555;
+        }
+        .conference {
             font-size: 1.2em;
-            color: #6a737d;
-            margin-top: 0;
-            margin-bottom: 1.5em;
+            font-weight: bold;
+            margin-top: 1em;
+            color: #d9534f; /* 红色，突出会议信息 */
         }
 
-        /* --- 分隔线 --- */
-        hr {
-            border: none;
-            height: 1px;
-            background-color: #e1e4e8;
+        /* --- 链接按钮 --- */
+        .links {
+            text-align: center;
             margin: 2em 0;
         }
-
-        /* --- 段落文字 --- */
-        p {
-            font-size: 1.1em;
-            color: #444;
-        }
-
-        /* --- 按钮组 --- */
-        .button-group {
-            margin-top: 2em;
-            display: flex;
-            justify-content: center;
-            gap: 1em; /* 按钮之间的间距 */
-            flex-wrap: wrap; /* 在小屏幕上换行 */
-        }
-
-        /* --- 按钮基础样式 --- */
-        .button {
+        .links a {
             display: inline-block;
-            padding: 0.8em 1.6em;
-            font-size: 1em;
-            font-weight: 600;
-            color: #ffffff;
+            margin: 0.5em;
+            padding: 0.8em 1.5em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
             text-decoration: none;
-            border-radius: 6px;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            color: #333;
+            font-weight: bold;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .links a:hover {
+            background-color: #333;
+            color: #fff;
+            border-color: #333;
         }
 
-        .button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        /* --- 章节标题 --- */
+        h2 {
+            font-size: 1.8em;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 0.3em;
+            margin-top: 2em;
+            margin-bottom: 1em;
         }
 
-        /* --- 主按钮 (GitHub) --- */
-        .button-primary {
-            background-color: #24292e; /* GitHub 黑色 */
+        /* --- 摘要和正文 --- */
+        .abstract-text {
+            font-size: 1.1em;
+            text-align: justify; /* 两端对齐，更美观 */
+        }
+        
+        /* --- 图片样式 --- */
+        .teaser-image {
+            width: 100%;
+            border-radius: 8px;
+            margin: 1em 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
-        /* --- 次按钮 (文档/演示) --- */
-        .button-secondary {
-            background-color: #0366d6; /* GitHub 蓝色 */
+        /* --- 响应式视频容器 --- */
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 宽高比 */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+            margin: 1em 0;
+            border-radius: 8px;
         }
-
-        /* --- 页脚 --- */
-        footer {
-            margin-top: 3em;
-            font-size: 0.9em;
-            color: #6a737d;
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
         }
     </style>
 </head>
 <body>
-
     <div class="container">
-        <h1>我的超棒项目 (My Awesome Project)</h1>
-        <p class="tagline">一个能解决 [某个问题] 的 [某种类型] 的工具/库。</p>
-        <hr>
+        <header>
+            <h1>[你的项目标题]</h1>
+            <div class="authors">[作者一], [作者二]<sup>*</sup>, [作者三]</div>
+            <div class="affiliations">[你的大学或研究机构] &nbsp;&nbsp;&nbsp; <sup>*</sup>通讯作者</div>
+            <div class="conference">发表于 NeurIPS 2025</div>
+            </header>
 
-        <p>
-            这里是项目的详细介绍。你可以详细说明这个项目的背景、它解决了什么痛点、核心功能有哪些、以及它的独特之处。分段介绍能让内容更清晰。
+        <div class="links">
+             <a href="#">📄 论文 (Paper)</a>
+            <a href="#">💻 代码 (Code)</a>
+            <a href="#">📊 数据 (Data)</a>
+            <a href="#">🎥 视频 (Video)</a>
+             </div>
+
+        <img src="https://via.placeholder.com/800x400.png?text=在这里替换成你的项目主图" alt="项目主图" class="teaser-image">
+        
+        <h2>Abstract</h2>
+        <p class="abstract-text">
+            [在这里写下你的项目摘要。这是一段关于你项目的高度概括，说明了研究的背景、采用的方法、以及得出的主要结论。尽量让语言精炼、专业。这是一个占位符段落，请用你自己的文字替换它。This is a placeholder for your abstract. You should replace this text with a concise summary of your project, outlining the background, methods, and key findings.]
         </p>
-        <p>
-            例如，你可以列出主要特性：<br>
-            ✨ 特性一：极速性能<br>
-            ✨ 特性二：简单易用的 API<br>
-            ✨ 特性三：完善的文档和社区支持
-        </p>
-        <div class="button-group">
-            <a href="https://github.com/[你的用户名]/[你的仓库名]" class="button button-primary">查看 GitHub 仓库</a>
-            <a href="#" class="button button-secondary">阅读文档 / 查看演示</a>
-            </div>
 
-        <footer>
-            <p>&copy; 2025 [你的名字或组织名]. Released under the MIT License.</p>
-            </footer>
+        <h2>视频 (Video)</h2>
+        <div class="video-container">
+            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
 
-    </div>
-
+        </div>
 </body>
 </html>
