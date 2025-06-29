@@ -1,0 +1,4 @@
+train_huff是训练原始的necoda st
+train_3stage是训练层级的necoda st，有一个降采分辨率到原始分辨率的训练过程加速
+cmd开头的是训练和重建的脚本
+zz是之前的一些训练和重建的脚本以及之前尝试改进的一些代码
