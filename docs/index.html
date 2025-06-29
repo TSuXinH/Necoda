@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>[项目名称] | 项目主页</title>
+    <title> High-Fidelity Functional Neural Data Compression via Neural Representations Enhances Data Sharing | project page </title>
     <style>
-        /* --- 全局样式 --- */
+
         body {
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             line-height: 1.8;
@@ -16,14 +16,12 @@
             padding: 0;
         }
 
-        /* --- 内容容器 --- */
         .container {
             max-width: 850px;
             margin: 2em auto;
             padding: 0 2em;
         }
 
-        /* --- 标题和作者信息 --- */
         header {
             text-align: center;
             margin-bottom: 2em;
@@ -45,10 +43,9 @@
             font-size: 1.2em;
             font-weight: bold;
             margin-top: 1em;
-            color: #d9534f; /* 红色，突出会议信息 */
+            color: #d9534f;
         }
 
-        /* --- 链接按钮 --- */
         .links {
             text-align: center;
             margin: 2em 0;
@@ -70,7 +67,6 @@
             border-color: #333;
         }
 
-        /* --- 章节标题 --- */
         h2 {
             font-size: 1.8em;
             border-bottom: 2px solid #eee;
@@ -79,13 +75,11 @@
             margin-bottom: 1em;
         }
 
-        /* --- 摘要和正文 --- */
         .abstract-text {
             font-size: 1.1em;
             text-align: justify; /* 两端对齐，更美观 */
         }
         
-        /* --- 图片样式 --- */
         .teaser-image {
             width: 100%;
             border-radius: 8px;
@@ -93,7 +87,6 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
-        /* --- 响应式视频容器 --- */
         .video-container {
             position: relative;
             padding-bottom: 56.25%; /* 16:9 宽高比 */
@@ -116,29 +109,38 @@
 <body>
     <div class="container">
         <header>
-            <h1>[你的项目标题]</h1>
-            <div class="authors">[作者一], [作者二]<sup>*</sup>, [作者三]</div>
-            <div class="affiliations">[你的大学或研究机构] &nbsp;&nbsp;&nbsp; <sup>*</sup>通讯作者</div>
-            <div class="conference">发表于 NeurIPS 2025</div>
+            <h2> Necoda: High-Fidelity Functional Neural Data Compression via Neural Representations Enhances Data Sharing </h2>
+            <div class="authors">[author1]<sup>*</sup>, [author1]<sup>*</sup>, [author1]</div>
+            <div class="affiliations">[Tsinghua University] &nbsp;&nbsp;&nbsp; <sup>*</sup>Corresponding author</div>
+            <div class="conference">Currently on Arxiv </div>
             </header>
 
         <div class="links">
-             <a href="#">📄 论文 (Paper)</a>
-            <a href="#">💻 代码 (Code)</a>
-            <a href="#">📊 数据 (Data)</a>
-            <a href="#">🎥 视频 (Video)</a>
+            <a href="#">📄 Paper </a>
+            <a href="#">💻 Code </a>
+            <a href="#">📊 Data </a>
              </div>
 
-        <img src="https://via.placeholder.com/800x400.png?text=在这里替换成你的项目主图" alt="项目主图" class="teaser-image">
         
         <h2>Abstract</h2>
         <p class="abstract-text">
-            [在这里写下你的项目摘要。这是一段关于你项目的高度概括，说明了研究的背景、采用的方法、以及得出的主要结论。尽量让语言精炼、专业。这是一个占位符段落，请用你自己的文字替换它。This is a placeholder for your abstract. You should replace this text with a concise summary of your project, outlining the background, methods, and key findings.]
+            Large-scale neuroimaging datasets are crucial for advancing neuroscience, yet their terabyte-scale size severely hinders data sharing, reuse, and reproducibility. Existing methods for compressing neuroimaging data either fall short of sufficient compression ratio or degrade neurophysiological fidelity. Here we present Necoda, a deep learning method that compresses functional imaging data by over 1,000-fold while preserving high-fidelity neural signals. Necoda leverages a content-adaptive neural network with either a spatiotemporal ar-chitecture or an entropy model depending on data characteristics, generalizes across unseen data, and enables one-time training for compressing numerous experiments. Necoda outperforms existing video codecs in both compression ratio and reconstruction quality on NAOMi simulation benchmarks, and demonstrates broad effectiveness across datasets from diverse species, brain regions and imaging modalities. Importantly, scientific findings, from single-cell tuning properties to population-level dynamics, are faithfully replicated from the compressed data. Necoda provides a practical solution to the data-sharing bottleneck, thus allowing broad access to large-scale datasets, acceler-ating neuroscience discoveries and ensuring reproducibility.
         </p>
 
-        <h2>视频 (Video)</h2>
+        <h2>Nedoda overview</h2>
+        <img src="https://via.placeholder.com/800x400.png?text=在这里替换成你的项目主图" alt="项目主图" class="teaser-image">
+
+        
+        <h2> Overall architecture and performance of Necoda </h2>
         <div class="video-container">
-            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <iframe 
+            src="https://player.bilibili.com/player.html?isOutside=true&aid=114767364627227&bvid=BV1VZ3wzrE19&cid=30764368238&p=1" 
+            scrolling="no" 
+            frameborder="no" 
+            framespacing="0" 
+            allowfullscreen="true"
+            width="100%"
+            height="100%"></iframe>
         </div>
 
         </div>
