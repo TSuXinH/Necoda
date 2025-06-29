@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>我的超棒项目 | 项目主页</title>
+    <style>
+        /* --- 整体样式 --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            line-height: 1.6;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* --- 内容容器 --- */
+        .container {
+            max-width: 800px;
+            margin: 2em;
+            padding: 2em;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        /* --- 标题 --- */
+        h1 {
+            color: #24292e;
+            font-size: 2.5em;
+            margin-bottom: 0.5em;
+        }
+
+        /* --- 副标题/标语 --- */
+        .tagline {
+            font-size: 1.2em;
+            color: #6a737d;
+            margin-top: 0;
+            margin-bottom: 1.5em;
+        }
+
+        /* --- 分隔线 --- */
+        hr {
+            border: none;
+            height: 1px;
+            background-color: #e1e4e8;
+            margin: 2em 0;
+        }
+
+        /* --- 段落文字 --- */
+        p {
+            font-size: 1.1em;
+            color: #444;
+        }
+
+        /* --- 按钮组 --- */
+        .button-group {
+            margin-top: 2em;
+            display: flex;
+            justify-content: center;
+            gap: 1em; /* 按钮之间的间距 */
+            flex-wrap: wrap; /* 在小屏幕上换行 */
+        }
+
+        /* --- 按钮基础样式 --- */
+        .button {
+            display: inline-block;
+            padding: 0.8em 1.6em;
+            font-size: 1em;
+            font-weight: 600;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        /* --- 主按钮 (GitHub) --- */
+        .button-primary {
+            background-color: #24292e; /* GitHub 黑色 */
+        }
+
+        /* --- 次按钮 (文档/演示) --- */
+        .button-secondary {
+            background-color: #0366d6; /* GitHub 蓝色 */
+        }
+
+        /* --- 页脚 --- */
+        footer {
+            margin-top: 3em;
+            font-size: 0.9em;
+            color: #6a737d;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>我的超棒项目 (My Awesome Project)</h1>
+        <p class="tagline">一个能解决 [某个问题] 的 [某种类型] 的工具/库。</p>
+        <hr>
+
+        <p>
+            这里是项目的详细介绍。你可以详细说明这个项目的背景、它解决了什么痛点、核心功能有哪些、以及它的独特之处。分段介绍能让内容更清晰。
+        </p>
+        <p>
+            例如，你可以列出主要特性：<br>
+            ✨ 特性一：极速性能<br>
+            ✨ 特性二：简单易用的 API<br>
+            ✨ 特性三：完善的文档和社区支持
+        </p>
+        <div class="button-group">
+            <a href="https://github.com/[你的用户名]/[你的仓库名]" class="button button-primary">查看 GitHub 仓库</a>
+            <a href="#" class="button button-secondary">阅读文档 / 查看演示</a>
+            </div>
+
+        <footer>
+            <p>&copy; 2025 [你的名字或组织名]. Released under the MIT License.</p>
+            </footer>
+
+    </div>
+
+</body>
+</html>
