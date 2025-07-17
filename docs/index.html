@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title> Necoda | project page </title>
     <style>
-
         body {
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             line-height: 1.8;
@@ -26,19 +26,23 @@
             text-align: center;
             margin-bottom: 2em;
         }
+
         h1 {
             font-size: 2.8em;
             margin-bottom: 0.2em;
             color: #000;
         }
+
         .authors {
             font-size: 1.1em;
             margin-bottom: 0.5em;
         }
+
         .affiliations {
             font-size: 1em;
             color: #555;
         }
+
         .conference {
             font-size: 1.2em;
             font-weight: bold;
@@ -50,6 +54,7 @@
             text-align: center;
             margin: 2em 0;
         }
+
         .links a {
             display: inline-block;
             margin: 0.5em;
@@ -61,6 +66,7 @@
             font-weight: bold;
             transition: background-color 0.2s, color 0.2s;
         }
+
         .links a:hover {
             background-color: #333;
             color: #fff;
@@ -69,7 +75,6 @@
 
         h2 {
             font-size: 1.8em;
-            border-bottom: 2px solid #eee;
             padding-bottom: 0.3em;
             margin-top: 2em;
             margin-bottom: 1em;
@@ -77,19 +82,19 @@
 
         .abstract-text {
             font-size: 1.1em;
-            text-align: justify; /* 两端对齐，更美观 */
+            text-align: justify;
         }
-        
+
         .teaser-image {
             width: 100%;
             border-radius: 8px;
             margin: 1em 0;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
         }
 
         .video-container {
             position: relative;
-            padding-bottom: 56.25%; /* 16:9 宽高比 */
+            padding-bottom: 56.25%;
             height: 0;
             overflow: hidden;
             max-width: 100%;
@@ -97,6 +102,7 @@
             margin: 1em 0;
             border-radius: 8px;
         }
+
         .video-container iframe {
             position: absolute;
             top: 0;
@@ -104,76 +110,267 @@
             width: 100%;
             height: 100%;
         }
+
+        .tabs {
+            margin-bottom: 1em;
+            text-align: center;
+        }
+
+        .tab-button {
+            display: inline-block;
+            margin: 0.5em;
+            padding: 0.8em 1.5em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #333;
+            background-color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        .tab-button:hover,
+        .tab-button.active {
+            background-color: #333;
+            color: #fff;
+            border-color: #333;
+        }
+
+        .comparison-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin: 1em 0;
+            user-select: none;
+            border-radius: 8px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            aspect-ratio: 1 / 1;
+            overflow: hidden;
+        }
+
+        .side-by-side-layout {
+            display: flex;
+            align-items: center;
+            gap: 2em;
+            margin-top: 1em;
+        }
+
+        .layout-left {
+            flex-shrink: 0;
+            width: 500px;
+        }
+
+        .layout-right {
+            flex-grow: 1;
+            font-size: 1.1em;
+            text-align: justify;
+        }
+
+        .comparison-container img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #after {
+            clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
+        }
+
+        .slider {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 4px;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            transform: translateX(-50%);
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .citation-container {
+            margin-top: 2em;
+            margin-bottom: 2em;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <header>
-            <h2> Necoda: High-Fidelity Functional Neural Data Compression via Neural Representations Enhances Data Sharing </h2>
+            <h2 style="font-weight: bold;"> Necoda: High-Fidelity Functional Neural Data Compression via Neural
+                Representation Enhances Data Sharing </h2>
             <div class="authors">[author1]<sup>*</sup>, [author1]<sup>*</sup>, [author1]</div>
             <div class="affiliations">[Tsinghua University] &nbsp;&nbsp;&nbsp; <sup>*</sup>Corresponding author</div>
             <div class="conference">Currently on Arxiv </div>
-            </header>
+        </header>
 
         <div class="links">
             <a href="#">📄 Paper </a>
             <a href="https://github.com/TSuXinH/Necoda">💻 Code </a>
             <a href="#">📊 Data </a>
-             </div>
+        </div>
 
-        
+        <h2>Overall architecture and performance of Necoda </h2>
+        <div class="video-container">
+            <iframe src="https://player.bilibili.com/player.html?isOutside=true&aid=114767364627227&bvid=BV1VZ3wzrE19&cid=30764368238&p=1" scrolling="no" frameborder="no" framespacing="0" allowfullscreen="true" width="100%" height="100%"></iframe>
+        </div>
+
         <h2>Abstract</h2>
         <p class="abstract-text">
-            Large-scale neuroimaging datasets are crucial for advancing neuroscience, yet their terabyte-scale size severely hinders data sharing, reuse, and reproducibility. Existing methods for compressing neuroimaging data either fall short of sufficient compression ratio or degrade neurophysiological fidelity. Here we present Necoda, a deep learning method that compresses functional imaging data by over 1,000-fold while preserving high-fidelity neural signals. Necoda leverages a content-adaptive neural network with either a spatiotemporal ar-chitecture or an entropy model depending on data characteristics, generalizes across unseen data, and enables one-time training for compressing numerous experiments. Necoda outperforms existing video codecs in both compression ratio and reconstruction quality on NAOMi simulation benchmarks, and demonstrates broad effectiveness across datasets from diverse species, brain regions and imaging modalities. Importantly, scientific findings, from single-cell tuning properties to population-level dynamics, are faithfully replicated from the compressed data. Necoda provides a practical solution to the data-sharing bottleneck, thus allowing broad access to large-scale datasets, acceler-ating neuroscience discoveries and ensuring reproducibility.
+            Modern neuroscience relies upon large-scale multi-dimensional datasets,
+            yet their terabyte-scale size severely hinders data sharing, reuse, and reproducibility.
+            To overcome these hurdles, we present Necoda,
+            a deep learning method that compresses functional imaging data by over 1,000-fold
+            while preserving high-fidelity neural signals.
+            Necoda leverages a content-adaptive spatiotemporal neural network architecture with an entropy model,
+            generalizes across unseen data, and enables one-time training for compressing numerous exper-iments.
+            Necoda demonstrates broad effectiveness across datasets from diverse species, brain regions and imaging
+            modalities.
+            Importantly, scientific findings, from single-cell tuning properties to population-level dynamics,
+            are faithfully replicated from the compressed data.
+            By alleviating the data-sharing bottleneck,
+            Necoda facilitates broad dissemination of large-scale datasets,
+            accelerating discovery and enhancing reproducibility in neuroscience.
         </p>
 
         <h2>Necoda overview</h2>
         <img src="web_fig1_overview.png" alt="Necoda overview" class="teaser-image">
+        <p>
+            Necoda employs an hourglass-shaped encoder-decoder architecture with a bottleneck in the middle.
+            After training with seen data, Necoda is able to compress temporally unseen data or
+            spatiotemporally unseen data into embeddings with 1,000 times smaller size, which can be used for storage
+            and sharing.
+            When necessary, these embeddings can be rapidly decompressed into data with full physiological details,
+            facilitating downstream analysis.
+        </p>
 
-
-        <h2>Overall architecture and performance of Necoda </h2>
-        <div class="video-container">
-        <iframe 
-            src="https://player.bilibili.com/player.html?isOutside=true&aid=114767364627227&bvid=BV1VZ3wzrE19&cid=30764368238&p=1" 
-            scrolling="no" 
-            frameborder="no" 
-            framespacing="0" 
-            allowfullscreen="true"
-            width="100%"
-            height="100%"></iframe>
-        </div>
 
         <h2>Necoda delivers better compression performance.</h2>
-        <p class="performance-text"></p>
-            When benchmarked against other traditional and learned video compression methods, 
-            Necoda demonstrates superior performance in reconstruction quality, compression ratio, 
-            and speed for functional neural data. 
-            It uniquely provides an efficient and robust solution that preserves vital physiological information 
-            at high compression ratios where other methods either fail, are unstable with noise, 
+        <img src="web_fig2_performance.png" alt="Necoda performance" class="teaser-image">
+        <p>
+            When benchmarked against other traditional and learned video compression methods,
+            Necoda demonstrates superior performance in reconstruction quality, compression ratio,
+            and speed for functional neural data.
+            It uniquely provides an efficient and robust solution that preserves vital physiological information
+            at high compression ratios where other methods either fail, are unstable with noise,
             or lack the practical generalization needed for routine use.
         </p>
-        <img src="web_fig2_performance.png" alt="Necoda performance" class="teaser-image">
-
-        <h2>Necoda shows widespread application.</h2>
-        <p class="usage-text"></p>
-        Necoda demonstrates broad effectiveness across datasets from diverse species, brain regions and imaging modalities.
-        While enabling thousand-fold compression, near-instantaneous downloads and high-speed local Browse, 
-        Necoda faithfully preserves essential physiological signals and even enhances the signal-to-noise ratio. 
-        This establishes it as a robust and versatile tool for dramatically improving data sharing, accessibility, 
-        and backup in neuroscience research.
-        </p>
-        <img src="web_fig3_usage.png" alt="Necoda usage" class="teaser-image">
 
         <h2>Necoda enhances TB level data sharing and reproduction.</h2>
-        <p class="reproduction-text">
-            By drastically reducing download time from months to under an hour and accelerating data processing, 
-            Necoda allows scientists to fully and rapidly reproduce published findings, 
+        <img src="web_fig4_reproduction1.png" alt="Necoda reproduction" class="teaser-image">
+        <p>
+            As a proof-of-concept, we replicated the results of a previous study using Allen brain observatory datasets
+            with a size around 4.8TB.
+            By drastically reducing download time from months to under an hour and accelerating data processing,
+            Necoda allows scientists to fully and rapidly reproduce the published findings,
             from raw data to final conclusions, within half a day.
         </p>
-        <img src="web_fig4_reproduction.png" alt="Necoda reproduction" class="teaser-image">
+        <img src="web_fig4_reproduction2.png" alt="Necoda reproduction" class="teaser-image">
 
-        <h3>If you find this project helpful, please cite: </h3>
+        <h2>Representative frames from raw and Necoda reconstruction</h2>
 
+        <div class="side-by-side-layout">
+            <div class="layout-left">
+                <div class="tabs">
+                    <button class="tab-button active" onclick="changeScene('simulation', this)">Simulation</button>
+                    <button class="tab-button" onclick="changeScene('2pram', this)">2pRAM</button>
+                    <button class="tab-button" onclick="changeScene('zebrafish', this)">Zebrafish</button>
+                </div>
+
+                <div class="comparison-container" id="comparison">
+                    <img src="simulation_raw.png" id="before">
+                    <img src="simulation_recon.png" id="after">
+                    <div class="slider" id="slider"></div>
+                </div>
+            </div>
+            <div class="layout-right">
+                <h3> Necoda demonstrates wide usage.</h3>
+                <p>
+                    Necoda has been comprehensively validated across a diverse range of neuroimaging datasets, 
+                    encompassing various imaging modalities and species. 
+                    These include two-photon random access mesoscopy (2pRAM), CaImAn and Neurofinder benchmarks, 
+                    both high- and low-power zebrafish imaging datasets, electrophysiological capture, and additional modalities.
+                </p>
+            </div>
         </div>
+
+        <div class="citation-container">
+            <h2>If you find this project helpful, please cite:</h2>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const comparison = document.getElementById("comparison");
+            const afterImage = document.getElementById("after");
+            const slider = document.getElementById("slider");
+
+            function updateSliderPosition(x) {
+                const rect = comparison.getBoundingClientRect();
+                let offset = x - rect.left;
+                const clampedOffset = Math.max(0, Math.min(offset, rect.width));
+
+                slider.style.left = clampedOffset + "px";
+                afterImage.style.clipPath = `polygon(${clampedOffset}px 0, 100% 0, 100% 100%, ${clampedOffset}px 100%)`;
+            }
+
+            comparison.addEventListener('mousemove', (e) => {
+                updateSliderPosition(e.clientX);
+            });
+
+            comparison.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                if (e.touches.length > 0) {
+                    updateSliderPosition(e.touches[0].clientX);
+                }
+            });
+
+            const resetSlider = () => {
+                const center = comparison.offsetWidth / 2;
+                slider.style.left = center + "px";
+                afterImage.style.clipPath = `polygon(${center}px 0, 100% 0, 100% 100%, ${center}px 100%)`;
+            };
+
+            window.addEventListener("load", resetSlider);
+            window.addEventListener("resize", resetSlider);
+        });
+
+        function changeScene(scene, clickedButton) {
+            const buttons = document.querySelectorAll('.tabs .tab-button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+            clickedButton.classList.add('active');
+
+            const beforeImg = document.getElementById("before");
+            const afterImg = document.getElementById("after");
+
+            if (scene === 'simulation') {
+                beforeImg.src = "simulation_raw.png";
+                afterImg.src = "simulation_recon.png";
+            } else if (scene === '2pram') {
+                beforeImg.src = "2pram_raw.png";
+                afterImg.src = "2pram_recon.png";
+            } else if (scene === 'zebrafish') {
+                beforeImg.src = "zebrafish_raw.png";
+                afterImg.src = "zebrafish_recon.png";
+            }
+
+            setTimeout(() => {
+                document.dispatchEvent(new Event('resize'));
+            }, 100);
+        }
+    </script>
+
 </body>
+
 </html>
