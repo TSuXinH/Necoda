@@ -283,6 +283,7 @@
                     <button class="tab-button active" onclick="changeScene('simulation', this)">Simulation</button>
                     <button class="tab-button" onclick="changeScene('2pram', this)">2pRAM</button>
                     <button class="tab-button" onclick="changeScene('zebrafish', this)">Zebrafish</button>
+                    <button class="tab-button" onclick="changeScene('drosophila', this)">Drosophila</button>
                 </div>
 
                 <div class="comparison-container" id="comparison">
@@ -294,10 +295,11 @@
             <div class="layout-right">
                 <h3> Necoda demonstrates wide usage.</h3>
                 <p>
-                    Necoda has been comprehensively validated across a diverse range of neuroimaging datasets, 
-                    encompassing various imaging modalities and species. 
-                    These include two-photon random access mesoscopy (2pRAM), CaImAn and Neurofinder benchmarks, 
-                    both high- and low-power zebrafish imaging datasets, electrophysiological capture, and additional modalities.
+                    Necoda has been comprehensively validated across a diverse range of neuroimaging datasets,
+                    encompassing various imaging modalities and species.
+                    These include two-photon random access mesoscopy (2pRAM), CaImAn and Neurofinder benchmarks,
+                    both high- and low-power zebrafish imaging datasets, electrophysiological capture, and additional
+                    modalities.
                 </p>
             </div>
         </div>
@@ -363,7 +365,11 @@
             } else if (scene === 'zebrafish') {
                 beforeImg.src = "zebrafish_raw.png";
                 afterImg.src = "zebrafish_recon.png";
+            } else if (scene === 'drosophila') {
+                beforeImg.src = "drosophila_raw.png";
+                afterImg.src = "drosophila_recon.png";
             }
+
 
             setTimeout(() => {
                 document.dispatchEvent(new Event('resize'));
