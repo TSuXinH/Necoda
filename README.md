@@ -2,7 +2,7 @@
 
 <img src="fig/overview1.png" width="800" align="middle">
 
-<!-- ### :triangular_flag_on_post: [[New version released! ：DeepCAD-RT]](https://github.com/cabooster/DeepCAD-RT) -->
+## [Project page](https://tsuxinh.github.io/Necoda/)
 
 ## Contents
 
@@ -65,7 +65,7 @@ $ pip install -r requirements
 
 ### Training
 
-For the dataset with a spatial shape of 512x512 and temporal shape of 6000, the following command can be used for standard training setup. This will generate quant.pth that can be further compressed via well-developed compression techniques like 7z.
+For the dataset with a spatial shape of 512x512 and temporal shape of 6000, the following command can be used for standard training setup. This will generate quant.pth that can be further compressed via well-developed compression techniques like 7z. The detailed meaning of each argument can be found in the training script
 
 To speed up training, `traing_3stage.py` can be used to enable hierarchical training strategy.
 ```
@@ -85,15 +85,18 @@ CUDA_VISIBLE_DEVICES=0 python recon_nerp_st_huff.py -d {} -e {} --name recon_{} 
 
 ## Results
 
-### 1. The performance of Necoda across diverse imaging modalities.
+### 1. Performance of Necoda across diverse imaging modalities.
+Evaluation of Necoda on multiple functional imaging datasets reveals that Necoda effectively compresses neuroimaging collections while preserving necessasry physiological information.
 
 <img src="fig/performance1.png" width="800" align="middle">
 
 ### 2. Benchmarking Necoda with existing video codecs.
+Necoda outperforms other codecs in training/compression efficiency and rate distortion performance on simulation benchmarks.
 
 <img src="fig/benchmark1.png" width="800" align="middle">
 
 ### 3. Reproducing analysis with Necoda on ABO datasets.
+Reproduction of results from one previous research paper with ABO datasets demonstrates that Necoda is able to act as a tool to facilitate TB-level data sharing and replication.
 
 <img src="fig/performance2.png" width="800" align="middle">
 
