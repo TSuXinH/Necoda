@@ -16,7 +16,7 @@
 
 <img src="fig/overview2.png" width="400" align="right">
 
-In neuroscience, progress hinges on sharing large-scale data. Initiatives like the Allen Brain Observatory (ABO) and standards like Neurodata Without Borders (NWB) are vital for enabling broad data reuse and collaboration. Sharing comprehensive, raw-like imaging data is particularly crucial for transparency, reproducibility, and developing new analysis tools.
+In neuroscience, progress hinges on sharing large-scale data. Sharing comprehensive, raw-like imaging data is particularly crucial for transparency, reproducibility, and developing new analysis tools.
 
 The primary obstacle is data size. Functional imaging datasets often reach the terabyte-scale, creating a massive bottleneck for data sharing, storage, and reuse. These logistical hurdles severely slow the pace of discovery and hinder the reproduction of scientific findings.
 
@@ -41,7 +41,7 @@ By removing the data-sharing bottleneck, we believe Necoda will significantly ac
 ### Code setup
 
 
-* Create a virtual environment and install Pytorch. Please select the correct Pytorch version that matches your CUDA version from https://pytorch.org/get-started/previous-versions/
+* Create a virtual environment and install Pytorch. Please select the correct Pytorch version that matches your CUDA version at https://pytorch.org/get-started/previous-versions/
 
 ```
 $ conda create -n necoda python=3.10
@@ -49,14 +49,14 @@ $ source activate necoda
 $ pip install torch==2.2.1 torchvision==0.17.1 torchaudio==2.2.1 --index-url https://download.pytorch.org/whl/cu121
 ```
 
-* Clone the environment
+* Clone the environment here.
 
 ```
 $ git clone git@github.com:TSuXinH/Necoda.git
 $ cd Necoda
 ```
 
-* Install other dependencies
+* Install other necessary dependencies
 
 ```
 $ pip install -r requirements
@@ -65,7 +65,7 @@ $ pip install -r requirements
 
 ### Training
 
-For the dataset with a spatial shape of 512x512 and temporal shape of 6000, the following command can be used for standard training setup. This will generate quant.pth that can be further compressed via well-developed compression techniques like 7z. The detailed meaning of each argument can be found in the training script
+For the dataset with a spatial shape of 512x512 and temporal shape of 6000, the following command can be used for standard training setup. This will generate quant.pth that can be further compressed via well-developed techniques like 7z. The detailed meaning of each argument can be found in the training script.
 
 To speed up training, `traing_3stage.py` can be used to enable hierarchical training strategy.
 ```
@@ -96,7 +96,7 @@ Necoda outperforms other codecs in training/compression efficiency and rate dist
 <img src="fig/benchmark1.png" width="800" align="middle">
 
 ### 3. Reproducing analysis with Necoda on ABO datasets.
-Reproduction of results from one previous research paper with ABO datasets demonstrates that Necoda is able to act as a tool to facilitate TB-level data sharing and replication.
+Reproduction of results from one previous research paper with ABO datasets demonstrates that Necoda is able to function as a tool to facilitate TB-level data sharing and replication.
 
 <img src="fig/performance2.png" width="800" align="middle">
 
