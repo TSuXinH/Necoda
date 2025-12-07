@@ -59,7 +59,7 @@ $ cd Necoda
 * Install other necessary dependencies
 
 ```
-$ pip install -r requirements
+$ pip install -r requirements.txt
 ```
 
 
