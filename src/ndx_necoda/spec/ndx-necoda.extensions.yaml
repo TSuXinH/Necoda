@@ -1,0 +1,25 @@
+groups:
+- neurodata_type_def: NecodaContainer
+  neurodata_type_inc: NWBDataInterface
+  doc: A container for Necoda storing compressed data and its metadata.
+  attributes:
+  - name: documentation
+    dtype: text
+    doc: User-provided documentation or notes about the data.
+    required: false
+  datasets:
+  - name: compressed_network
+    dtype: uint8
+    doc: The compressed Necoda network, stored as a byte stream dataset.
+  - name: compressed_embedding
+    dtype: uint8
+    doc: A list of compressed embeddings, each stored as a byte stream.
+  - name: compressed_embedding_index
+    dtype: int
+    doc: A list showing the length of each embedding.
+  - name: original_data_size
+    dtype: int
+    doc: Size of the original data in bytes.
+  - name: compressed_data_size
+    dtype: int
+    doc: Size of the current, compressed data in bytes.

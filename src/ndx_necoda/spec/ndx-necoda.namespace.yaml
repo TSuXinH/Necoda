@@ -1,0 +1,11 @@
+namespaces:
+- author: XXH
+  contact: xuxh0616@gmail.com
+  doc: An extension for Necoda storing compressed data and its metadata.
+  name: ndx-necoda
+  schema:
+  - namespace: core
+    neurodata_types:
+    - NWBDataInterface
+  - source: ndx-necoda.extensions.yaml
+  version: 0.1.0
