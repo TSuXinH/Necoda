@@ -110,7 +110,6 @@ def main():
     torch.set_printoptions(precision=2)
 
     args = parser.parse_args()
-    args.output_path = os.path.join('output', args.output_path)
     args.chns_list_str = ','.join([str(x) for x in args.chns_list])
     args.quant_str = f'Q_M{args.quant_model_bit}_E{args.quant_embed_bit}'
     exp_id = (

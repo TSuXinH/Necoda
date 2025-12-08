@@ -121,7 +121,6 @@ def main():
     torch.set_printoptions(precision=2)
 
     args = parser.parse_args()
-    args.output_path = os.path.join('output', args.output_path)
     args.chns_list_str = ','.join([str(x) for x in args.chns_list])
     args.quant_str = f'Q_M{args.quant_model_bit}_E{args.quant_embed_bit}'
     exp_id = (
@@ -385,10 +384,9 @@ def train(local_rank, args):
             pred_psnr_list.append(psnr_fn_patch(patch_out.detach(), patch_gt))
             if i % args.print_freq == 0 or i == len(train_dataloader) - 1:
                 pred_psnr = torch.cat(pred_psnr_list).mean()
-                print_str = '[{}] Rank:{}, Epoch[{}/{}], Step [{}/{}], lr:{:.2e}, pred_PSNR: {}, raw l2 loss: {:.6e}, perceptual loss: {:.6e}'.format(
+                print_str = '[{}] Rank:{}, Epoch[{}/{}], Step [{}/{}], lr:{:.2e}, raw l2 loss: {:.6e}, perceptual loss: {:.6e}'.format(
                     datetime.now().strftime("%Y/%m/%d %H:%M:%S"),
                     local_rank, epoch + 1, args.epochs, i + 1, len(train_dataloader), lr,
-                    round_tensor(pred_psnr, 2),
                     np.mean(raw_loss_list),
                     np.mean(perc_loss_list),
                 )

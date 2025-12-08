@@ -41,7 +41,7 @@ By removing the data-sharing bottleneck, we believe Necoda will significantly ac
 ### Code setup
 
 
-* Create a virtual environment and install Pytorch. Please select the correct Pytorch version that matches your CUDA version at https://pytorch.org/get-started/previous-versions/
+* Create a virtual environment and install Pytorch. Please select the correct Pytorch version that matches your CUDA version at https://pytorch.org/get-started/previous-versions/.
 
 ```
 $ conda create -n necoda python=3.10
@@ -56,7 +56,7 @@ $ git clone git@github.com:TSuXinH/Necoda.git
 $ cd Necoda
 ```
 
-* Install other necessary dependencies
+* Install other necessary dependencies.
 
 ```
 $ pip install -r requirements.txt
@@ -68,25 +68,29 @@ $ pip install -r requirements.txt
 For the dataset with a spatial shape of 512x512 and temporal shape of 6000, the following command can be used for standard training setup. This will generate quant.pth that can be further compressed via well-developed techniques like 7z. The detailed meaning of each argument can be found in the training script.
 
 To speed up training, `traing_3stage.py` can be used to enable hierarchical training strategy.
+
+ABO datasets, as the training data, can be downloaded from https://drive.google.com/drive/folders/1bAsTiy0aMIoUEjw9QJhIm0PCqTSuXoR8.
 ```
 CUDA_VISIBLE_DEVICES=0 python train_huff.py --pre_norm mean_std --output_path {} --data_path {} \
                     --act gelu --norm none --pre_s_rate 2 --pre_t_rate 2 --s_emb_dim 2 --t_emb_dim 2 \
                     --s_s_rate_list 1 1 1 --t_s_rate_list 4 4 4 --s_t_rate_list 4 4 4 --t_t_rate_list 1 1 1 \
                     --loss L2 --model_type nerp_st -e 100 --eval_freq 10 -b 2 --lr 2e-4 --overwrite \
-                    --chns_list 32 32 32 -g {} --quant_embed_bit 4 --remark interp8 --interp_size_x 8 --interp_size_t 8
+                    --chns_list 32 32 32 -g {} --quant_embed_bit 4  --interp_size_x 8 --interp_size_t 8 --remark {}
 ``` 
 
 ### Inference
-The following command can be used to decompress the compressed latents with the trained network to obtain the reconstruction.
+The following command can be used to decompress the latents with the trained network.
 ```
 CUDA_VISIBLE_DEVICES=0 python recon_nerp_st_huff.py -d {} -e {} --name recon_{} -g {}
 ```
+
+Please refer to the py files with prefix **cmd** (command) for more details or use them directly.
 
 
 ## Results
 
 ### 1. Performance of Necoda across diverse imaging modalities.
-Evaluation of Necoda on multiple functional imaging datasets reveals that Necoda effectively compresses neuroimaging collections while preserving necessasry physiological information.
+Evaluation of Necoda on multiple functional imaging datasets reveals that Necoda effectively compresses neuroimaging collections while preserving necessary physiological information.
 
 <img src="fig/performance1.png" width="800" align="middle">
 
