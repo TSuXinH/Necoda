@@ -86,6 +86,10 @@ CUDA_VISIBLE_DEVICES=0 python recon_nerp_st_huff.py -d {} -e {} --name recon_{} 
 
 Please refer to the py files with prefix **cmd** (command) for more details or use them directly.
 
+### Optional
+
+The nwb extension for Necoda and 7z compression are further provided in scripts `necoda_nwb_encode_ABO.py` and `necoda_nwb_encode_ABO.py`.
+
 
 ## Results
 
@@ -109,4 +113,3 @@ Reproduction of results from one previous research paper with ABO datasets demon
 ## Citation
 
 Currently paper of this project is not officially online.
-
