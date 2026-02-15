@@ -67,7 +67,7 @@ def main():
     parser.add_argument('--resize_list', type=str, default='-1', help='video resize size', )
     parser.add_argument('--img_chns', type=int, default=3,
                         help='the input and output channels of image, e.g. 1 for gray and 3 for rgb')
-    parser.add_argument('--pre_norm', type=str, default='mean', choices=['min_max', 'mean', 'mean_std', 'mean_max'],
+    parser.add_argument('--pre_norm', type=str, default='mean_std', choices=['min_max', 'mean_std', 'mean_max'],
                         help='determine the pre process of images')
     parser.add_argument('--do_resize', type=bool, default=False, help='Specify whether do resize for the dataset')
     parser.add_argument('--x_resize', type=int, default=0, help='Specify resized x')
