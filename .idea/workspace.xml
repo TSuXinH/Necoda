@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="77b6abde-3ad1-4b45-92b8-d07bba7b16db" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/train_3stage.py" beforeDir="false" afterPath="$PROJECT_DIR$/train_3stage.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/train_huff.py" beforeDir="false" afterPath="$PROJECT_DIR$/train_huff.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model_box/gap_module.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_box/gap_module.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

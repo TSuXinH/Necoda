@@ -11,7 +11,7 @@ def get_gap_module(
             if do_ds else GapModule(output_x, output_t, in_channel, out_channel, final_act=final_act)
     elif interp_method == 'conv':
         interp_size_x = abs(int((interp_size_x - output_x) // 2))
-        interp_size_t = abs(int((interp_size_t - output_x) // 2))
+        interp_size_t = abs(int((interp_size_t - output_t) // 2))
         return GapModuleConv(interp_size_x, interp_size_t, in_channel, out_channel, do_ds=do_ds)
     else:
         raise NotImplementedError
