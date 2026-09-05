@@ -1,7 +1,6 @@
-import torch
 import torch.nn as nn
-from model_box.spatiotemporal_code import SpatiotemporalCodeLayer
 
+from model_box.spatiotemporal_code import SpatiotemporalCodeLayer
 
 class PassWay(nn.Module):
     def __init__(
@@ -24,7 +23,7 @@ class PassWay(nn.Module):
                     chns_list[idx+1],
                     act,
                     do_ds=True,
-                    apply_in=True
+                    apply_in=True,
                 ) if idx < len(s_rate_list)-1
                 else SpatiotemporalCodeLayer(
                     s_rate_list[idx],
@@ -42,6 +41,7 @@ class PassWay(nn.Module):
                     t_rate_list[-(idx+1)],
                     embedding_dim,
                     chns_list[-(idx+1)],
+                    act,
                     do_ds=False,
                     apply_in=True,
                 ) if idx == 0
@@ -50,6 +50,7 @@ class PassWay(nn.Module):
                     t_rate_list[-(idx+1)],
                     chns_list[-idx],
                     chns_list[-(idx+1)],
+                    act,
                     do_ds=False,
                     apply_in=True,
                 )
@@ -64,4 +65,3 @@ class PassWay(nn.Module):
         for layer in self.decoder:
             x, _ = layer(x)
         return x, emb
-

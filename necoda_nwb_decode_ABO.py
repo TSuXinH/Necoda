@@ -1,3 +1,4 @@
+import argparse
 import os
 import sys
 from pathlib import Path
@@ -33,7 +34,7 @@ def decode_from_nwb(
 
     os.makedirs(output_dir, exist_ok=True)
 
-    print("==== Necoda ← NWB decoding ====")
+    print("==== NeCoDA dual-stream entropy ← NWB decoding ====")
     print(f"NWB path   : {nwb_path}")
     print(f"Output dir : {output_dir}")
     print()
@@ -61,7 +62,7 @@ def decode_from_nwb(
 
         print(f"[1/3] Loaded container: {name}")
 
-        print("[2/3] Reading compressed arrays from container...")
+        print("[2/3] Reading archived model and stream arrays...")
         read_network = np.array(container.compressed_network)
         read_embedding = np.array(container.compressed_embedding)
         read_embedding_index = np.array(container.compressed_embedding_index)
@@ -72,7 +73,7 @@ def decode_from_nwb(
     print(f"  embedding_index  : {read_embedding_index.shape}")
     print()
 
-    print("[3/3] Regenerating files from compressed data...")
+    print("[3/3] Restoring model and stream files...")
 
     generate_pth_embedding(
         output_dir,
@@ -81,7 +82,7 @@ def decode_from_nwb(
     )
 
     generate_network_embedding(
-        output_dir,
+        os.path.join(output_dir, "g1"),
         read_network,
     )
 
@@ -89,21 +90,17 @@ def decode_from_nwb(
 
 
 def main():
-    name = "ABO642877968"
-    nwb_path = os.path.join(f"./nwb_encoded_{name}", f"{name}.nwb")
-    output_dir = f"./nwb_decoded_{name}"
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--nwb-path", required=True)
+    parser.add_argument("--name", default=None)
+    parser.add_argument("--output-dir", default=None)
+    args = parser.parse_args()
 
-    try:
-        decode_from_nwb(
-            nwb_path=nwb_path,
-            name=name,   
-            output_dir=output_dir,
-        )
-        print("\nTest decoding finished.\n")
-    except Exception:
-        print("\n[ERROR] Decoding failed.")
-        import traceback
-        traceback.print_exc()
+    decode_from_nwb(
+        nwb_path=args.nwb_path,
+        name=args.name,
+        output_dir=args.output_dir,
+    )
 
 
 if __name__ == "__main__":

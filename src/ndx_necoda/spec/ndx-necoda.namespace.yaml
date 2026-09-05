@@ -1,7 +1,7 @@
 namespaces:
-- author: XXH
+- author: NeCoDA authors
   contact: xuxh0616@gmail.com
-  doc: An extension for Necoda storing compressed data and its metadata.
+  doc: An extension for NeCoDA storing model, streams, and codec metadata.
   name: ndx-necoda
   schema:
   - namespace: core

@@ -1,7 +1,6 @@
-import torch
 import torch.nn as nn
-from model_box.util import get_conv3d_convtranspose3d_spatiotemporal_parameter
 
+from model_box.util import get_conv3d_convtranspose3d_spatiotemporal_parameter
 
 class SpatiotemporalCodeLayer(nn.Module):
     def __init__(
@@ -25,7 +24,7 @@ class SpatiotemporalCodeLayer(nn.Module):
                 st_sample(in_chns, out_chns, k_s, s_s, p_s),
                 act(),
             )
-        elif do_ds:  # seems we do not need to use this
+        elif do_ds:
             k_s = s_s = [t_rate, s_rate, s_rate]
             self.st_sample = nn.MaxPool3d(k_s, s_s)
         else:
