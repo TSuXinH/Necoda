@@ -1,98 +1,160 @@
 import torch
 import torch.nn as nn
-from torch.nn.functional import interpolate
-from model_box.util import get_conv3d_convtranspose3d_spatiotemporal_parameter
+from pytorch_msssim import ms_ssim
 
+class RateDistortionLoss(nn.Module):
 
-class CBAPLayer(nn.Module):
     def __init__(
         self,
-        in_chn,
-        out_chn,
-        pooling_stride,
-        activation=nn.GELU
+        lam=0.01,
+        metric="normalized-mse",
+        temporal_weight=0.0,
+        likelihood_floor=1e-9,
+        return_type="all",
     ):
         super().__init__()
-        self.cbap_layer = nn.Sequential(
-            nn.Conv3d(in_channels=in_chn, out_channels=out_chn, kernel_size=(3, 3, 3), stride=(1, 1, 1), padding=(1, 1, 1)),
-            nn.BatchNorm3d(out_chn),
-            activation(),
-            nn.MaxPool3d(kernel_size=(pooling_stride, pooling_stride, pooling_stride), stride=(pooling_stride, pooling_stride, pooling_stride)),
+
+        if metric not in {
+            "mse",
+            "normalized-mse",
+            "ms-ssim",
+        }:
+            raise NotImplementedError(
+                f"{metric} is not implemented."
+            )
+
+        self.metric = metric
+        self.lam = float(lam)
+        self.temporal_weight = float(temporal_weight)
+        self.likelihood_floor = float(likelihood_floor)
+        self.return_type = return_type
+
+    @staticmethod
+    def _safe_key(name):
+        return str(name).replace(".", "_").replace("/", "_")
+
+    def forward(
+        self,
+        output,
+        target,
+        rate_weight=1.0,
+    ):
+        if "x_hat" not in output:
+            raise KeyError("output must contain 'x_hat'")
+        if "likelihoods" not in output:
+            raise KeyError("output must contain 'likelihoods'")
+
+        n, c, t, h, w = target.shape
+        num_values = n * c * t * h * w
+
+        out = {}
+        total_bpp = target.new_zeros(())
+
+        for name, likelihood in output["likelihoods"].items():
+            likelihood = likelihood.float().clamp(
+                min=self.likelihood_floor,
+                max=1.0,
+            )
+
+            stream_bpp = (
+                -torch.log2(likelihood).sum()
+                / float(num_values)
+            )
+
+            out[
+                f"{self._safe_key(name)}_bpp"
+            ] = stream_bpp
+            total_bpp = total_bpp + stream_bpp
+
+        out["bpp_loss"] = total_bpp
+
+        prediction = output["x_hat"].float()
+        target_fp32 = target.float()
+
+        raw_mse_per_sample = (
+            (prediction - target_fp32)
+            .pow(2)
+            .flatten(1)
+            .mean(1)
+        )
+        out["mse_loss"] = raw_mse_per_sample.mean()
+
+        target_var_per_sample = (
+            target_fp32
+            .flatten(1)
+            .var(dim=1, unbiased=False)
+            .clamp_min(1e-8)
+        )
+        normalized_mse_per_sample = (
+            raw_mse_per_sample
+            / target_var_per_sample
+        )
+        out["normalized_mse_loss"] = (
+            normalized_mse_per_sample.mean()
         )
 
-    def forward(self, x):
-        return self.cbap_layer(x)
+        if self.metric == "mse":
+            distortion = out["mse_loss"]
 
+        elif self.metric == "normalized-mse":
+            distortion = out["normalized_mse_loss"]
 
-class Discriminator(nn.Module):
-    def __init__(
-        self,
-        channel_list,
-        pooling_stride_list,
-        linear_dim_list,
-        selected_layer=None,
-    ):
-        super().__init__()
-        self.ds_net = []
-        self.linear_net = [nn.Flatten()]
-        self.selected_layer = selected_layer
-        for idx in range(len(channel_list)-1):
-            self.ds_net.append(
-                CBAPLayer(
-                    in_chn=channel_list[idx],
-                    out_chn=channel_list[idx+1],
-                    pooling_stride=pooling_stride_list[idx]
-                ),
-            )
-        for idx in range(len(linear_dim_list)-1):
-            self.linear_net.extend([nn.Linear(linear_dim_list[idx], linear_dim_list[idx+1]), nn.GELU()]) \
-                if idx != len(linear_dim_list)-2 else self.linear_net.extend([nn.Linear(linear_dim_list[-2], linear_dim_list[-1]), nn.Sigmoid()])
-        self.ds_net = nn.Sequential(*self.ds_net)
-        self.linear_net = nn.Sequential(*self.linear_net)
-
-    def forward(self, x):
-        if self.selected_layer is not None:
-            p_loss_feat_list = []
-            for idx in range(len(self.ds_net)):
-                x = self.ds_net[idx](x)
-                if idx in self.selected_layer:
-                    p_loss_feat_list.append(x)
-            x = self.linear_net(x)
-            return x, p_loss_feat_list
         else:
-            return self.linear_net(self.ds_net(x))
+            out["ms_ssim"] = ms_ssim(
+                prediction,
+                target_fp32,
+                data_range=1.0,
+                size_average=True,
+            )
+            out["ms_ssim_loss"] = 1.0 - out["ms_ssim"]
+            distortion = out["ms_ssim_loss"]
 
+        if t > 1:
+            pred_dt = prediction[:, :, 1:] - prediction[:, :, :-1]
+            target_dt = target_fp32[:, :, 1:] - target_fp32[:, :, :-1]
 
-def cal_p_loss(discriminator, generation, target, loss_fn):
-    discriminator.eval()
-    _, generation_feat = discriminator(generation)
-    _, target_feat = discriminator(target)
-    final_loss = 0
-    for feat_idx in range(len(generation_feat)):
-        final_loss += loss_fn(generation_feat[feat_idx], target_feat[feat_idx])
-    return final_loss
+            temporal_mse_per_sample = (
+                (pred_dt - target_dt)
+                .pow(2)
+                .flatten(1)
+                .mean(1)
+            )
+            target_dt_var = (
+                target_dt
+                .flatten(1)
+                .var(dim=1, unbiased=False)
+                .clamp_min(1e-8)
+            )
+            out["temporal_loss"] = (
+                temporal_mse_per_sample
+                / target_dt_var
+            ).mean()
+        else:
+            out["temporal_loss"] = target.new_zeros(())
 
+        out["distortion_loss"] = (
+            distortion
+            + self.temporal_weight
+            * out["temporal_loss"]
+        )
 
-def cal_generator_loss(discriminator, generation, loss_fn, device='cuda'):
-    discriminator.eval()
-    generation_pred, _ = discriminator(generation)
-    label = torch.zeros_like(generation_pred).to(device)
-    loss = loss_fn(generation_pred, label)
-    return loss
+        rate_weight_t = target.new_tensor(
+            float(rate_weight)
+        )
+        out["rate_weight"] = rate_weight_t
+        out["loss"] = (
+            self.lam * out["distortion_loss"]
+            + rate_weight_t * out["bpp_loss"]
+        )
 
+        if not torch.isfinite(out["loss"]):
+            raise FloatingPointError(
+                "RateDistortionLoss produced NaN/Inf. "
+                f"bpp={out['bpp_loss'].detach().item()}, "
+                f"distortion={out['distortion_loss'].detach().item()}"
+            )
 
-def cal_discriminator_loss(discriminator, target, loss_fn, device='cuda'):
-    discriminator.train()
-    target_pred, _ = discriminator(target)
-    label = torch.ones_like(target_pred).to(device)
-    loss = loss_fn(target_pred, label)
-    return loss
+        if self.return_type == "all":
+            return out
 
-
-class TemporalFusionLayer(nn.Module):
-    def __init__(
-        self,
-    ):
-        super().__init__()
-        pass
-
+        return out[self.return_type]

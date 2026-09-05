@@ -1,3 +1,4 @@
+import argparse
 import os
 import sys
 import uuid
@@ -31,7 +32,7 @@ def encode_to_nwb(
 
     nwb_path = os.path.join(output_dir, f"{name}.nwb")
 
-    print("==== Necoda → NWB encoding ====")
+    print("==== NeCoDA dual-stream entropy → NWB encoding ====")
     print(f"Name              : {name}")
     print(f"Base path         : {base_path}")
     print(f"Epoch number      : {epoch_num}")
@@ -43,17 +44,17 @@ def encode_to_nwb(
 
     container = NecodaContainer(name=name)
 
-    model_pth = os.path.join(base_path, f"model_quant_{epoch_num}.pth")
+    model_pth = os.path.join(base_path, "g1", f"raw_model_{epoch_num}.pth")
     if not os.path.isfile(model_pth):
-        raise FileNotFoundError(f"Quantized model file not found: {model_pth}")
+        raise FileNotFoundError(f"Model checkpoint not found: {model_pth}")
 
-    print(f"[1/3] Archiving quantized network from: {model_pth}")
+    print(f"[1/3] Archiving model checkpoint from: {model_pth}")
     container.create_archive_network_from_file(filepath=model_pth)
 
     container.add_doc(f"Compression of {name}")
     container.add_original_data_size(original_data_size)
 
-    print(f"[2/3] Archiving embeddings from base path: {base_path}")
+    print(f"[2/3] Archiving per-dataset streams from base path: {base_path}")
     container.create_archive_embedding_from_file(
         base_file_path=base_path,
         embedding_number=embedding_number,
@@ -81,30 +82,23 @@ def encode_to_nwb(
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--name", required=True)
+    parser.add_argument("--base-path", required=True)
+    parser.add_argument("--epoch", type=int, required=True)
+    parser.add_argument("--embedding-number", type=int, required=True)
+    parser.add_argument("--original-data-size", type=int, required=True)
+    parser.add_argument("--output-dir", default=None)
+    args = parser.parse_args()
 
-    name = "ABO642877968"
-    epoch_num = 60
-    embedding_number = 2
-    original_data_size = int(3072973 * 2 * 1024)  # calculated using raw data
-
-    # Replace with the true path
-    base_path = "./result"
-    output_dir = f"./nwb_encoded_{name}"
-
-    try:
-        encode_to_nwb(
-            name=name,
-            base_path=base_path,
-            epoch_num=epoch_num,
-            embedding_number=embedding_number,
-            original_data_size=original_data_size,
-            output_dir=output_dir,
-        )
-        print("\nTest encoding finished.\n")
-    except Exception as e:
-        print("\n[ERROR] Encoding failed.")
-        import traceback
-        traceback.print_exc()
+    encode_to_nwb(
+        name=args.name,
+        base_path=args.base_path,
+        epoch_num=args.epoch,
+        embedding_number=args.embedding_number,
+        original_data_size=args.original_data_size,
+        output_dir=args.output_dir,
+    )
 
 
 if __name__ == "__main__":

@@ -10,13 +10,13 @@ groups:
   datasets:
   - name: compressed_network
     dtype: uint8
-    doc: The compressed Necoda network, stored as a byte stream dataset.
+    doc: The compressed NeCoDA model checkpoint, stored as a byte stream dataset.
   - name: compressed_embedding
     dtype: uint8
-    doc: A list of compressed embeddings, each stored as a byte stream.
+    doc: Per-dataset compressed stream and reconstruction-metadata bundles.
   - name: compressed_embedding_index
     dtype: int
-    doc: A list showing the length of each embedding.
+    doc: Inclusive end indices delimiting each per-dataset stream bundle.
   - name: original_data_size
     dtype: int
     doc: Size of the original data in bytes.

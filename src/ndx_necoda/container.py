@@ -1,29 +1,13 @@
 # src/ndx_necoda/container.py
-import os
 import io
-import py7zr
-import numpy as np
-from pynwb.core import NWBDataInterface
-from pynwb.core import register_class
+import os
 from typing import List, Tuple
-from hdmf.utils import docval
 
-from pynwb import register_class
-from pynwb.core import NWBDataInterface
-from hdmf.utils import docval
 import numpy as np
-
-
+import py7zr
+from hdmf.utils import docval
 from pynwb import register_class
 from pynwb.file import NWBDataInterface
-from hdmf.utils import docval, get_docval, popargs
-from hdmf.container import Data
-
-
-from pynwb import register_class
-from pynwb.file import NWBDataInterface
-from hdmf.utils import docval, popargs
-from hdmf.container import Container
 
 
 @register_class('NecodaContainer', 'ndx-necoda')
@@ -60,18 +44,6 @@ class NecodaContainer(NWBDataInterface):
             filepath: str,
             compression_level: int = 9
     ):
-        """
-        Reads a file from disk, compresses it, and packages it into a
-        CompressedArchive NWB object.
-
-        Args:
-            name (str): A descriptive name for the archive object inside NWB.
-            filepath (str): The path to the file on disk to be compressed.
-            compression_level (int): The compression level to use (1-9).
-
-        Returns:
-            A new instance of the CompressedArchive class, or None on error.
-        """
         if not os.path.isfile(filepath):
             print(f"Error: Source file not found at '{filepath}'")
             return None
@@ -111,7 +83,8 @@ class NecodaContainer(NWBDataInterface):
             )
         self.compressed_embedding = packed_compressed_embedding
         self.compressed_embedding_index = ensure_array(index_list)
-        self.compressed_data_size = np.sum(compressed_size_list)
+        network_size = 0 if self.compressed_network is None else len(self.compressed_network)
+        self.compressed_data_size = int(network_size + np.sum(compressed_size_list))
 
     def add_doc(self, doc):
         self.documentation = doc
@@ -124,20 +97,22 @@ def generate_uint8_embedding(base_file_path, embedding_number, epoch_num, compre
     compressed_embedding_list = []
     compressed_size_list = []
     for cur_embedding_id in range(embedding_number):
-        cur_path = os.path.join(
-            base_file_path,
-            'g{}'.format(cur_embedding_id+1),
-            'quant_all_{}.pth'.format(epoch_num)
-        )
+        dataset_dir = os.path.join(base_file_path, 'g{}'.format(cur_embedding_id+1))
+        stream_path = os.path.join(dataset_dir, 'c_dict_{}.pth'.format(epoch_num))
+        args_path = os.path.join(dataset_dir, 'args.pth')
+        for required_path in (stream_path, args_path):
+            if not os.path.isfile(required_path):
+                raise FileNotFoundError(required_path)
         in_memory_archive = io.BytesIO()
         filters = [{"id": py7zr.FILTER_LZMA2, "preset": compression_level, "dict_size": 128 << 20}]
         with py7zr.SevenZipFile(in_memory_archive, 'w', filters=filters) as archive:
-            archive.write(cur_path, os.path.basename(cur_path))
+            archive.write(stream_path, os.path.basename(stream_path))
+            archive.write(args_path, os.path.basename(args_path))
         print('7z compression done')
         compressed_bytes = np.frombuffer(in_memory_archive.getvalue(), dtype=np.uint8)
         compressed_embedding_list.append(compressed_bytes)
         compressed_size_list.append(len(compressed_bytes))
-        print('Current size of embedding {}: {:.3f}KB'.format(cur_embedding_id+1, len(compressed_bytes)/1024))
+        print('Current size of stream bundle {}: {:.3f}KB'.format(cur_embedding_id+1, len(compressed_bytes)/1024))
 
     packed_compressed_embedding, index_list = pack_uint8_segments(compressed_embedding_list)
     print('index_list')
@@ -146,15 +121,6 @@ def generate_uint8_embedding(base_file_path, embedding_number, epoch_num, compre
 
 
 def generate_pth_embedding(output_path, packed_compressed_embedding, index_list):
-    """
-    Reconstructs and decompresses a list of compressed .pth files from a packed uint8 array.
-
-    Args:
-        output_path (str): Base output directory to write decompressed .pth files.
-        packed_compressed_embedding (np.ndarray): Flattened uint8 array containing all compressed files.
-        index_list (np.ndarray): Inclusive end indices of each compressed file segment.
-        epoch_num (int): Used in filename formatting.
-    """
     os.makedirs(output_path, exist_ok=True)
     compressed_embedding_list = unpack_uint8_segments(packed_compressed_embedding, index_list)
     for cur_embedding_id, compressed_bytes in enumerate(compressed_embedding_list):
@@ -163,40 +129,24 @@ def generate_pth_embedding(output_path, packed_compressed_embedding, index_list)
         in_memory_archive = io.BytesIO(compressed_bytes.tobytes())
         with py7zr.SevenZipFile(in_memory_archive, mode='r') as archive:
             archive.extractall(path=subdir)
-        print(f"Decompressed embedding g{cur_embedding_id+1} to: {subdir}")
+        print(f"Restored stream bundle g{cur_embedding_id+1} to: {subdir}")
 
 
 def generate_network_embedding(output_path, compressed_network):
-    """
-    Reconstructs and decompresses a list of compressed .pth files from a packed uint8 array.
-    """
+
     os.makedirs(output_path, exist_ok=True)
     in_memory_archive = io.BytesIO(compressed_network.tobytes())
     with py7zr.SevenZipFile(in_memory_archive, mode='r') as archive:
         archive.extractall(path=output_path)
-    print(f"Decompressed model_quant to: {output_path}")
+    print(f"Restored model checkpoint to: {output_path}")
 
 
 def pack_uint8_segments(data_list: List[np.ndarray]) -> Tuple[np.ndarray, np.ndarray]:
-    """
-    Flattens a list of uint8 arrays into a single flat array, along with
-    an array of end indices to recover original segments.
-
-    Args:
-        data_list (List[np.ndarray]): List of 1D arrays with dtype=np.uint8.
-
-    Returns:
-        flat_data (np.ndarray): Concatenated array of all data (dtype=uint8).
-        end_indices (np.ndarray): Array of end indices (inclusive) for each segment (dtype=int64).
-    """
-    # Type and shape check
     if not all(isinstance(x, np.ndarray) and x.dtype == np.uint8 and x.ndim == 1 for x in data_list):
         raise ValueError("All items must be 1D numpy arrays with dtype=uint8.")
 
-    # Concatenate all arrays
     flat_data = np.concatenate(data_list)
 
-    # Compute end indices (inclusive)
     lengths = [len(x) for x in data_list]
     end_indices = np.cumsum(lengths) - 1  # inclusive end position
     if end_indices.ndim == 0: end_indices = np.expand_dims(end_indices, axis=0)
@@ -204,16 +154,6 @@ def pack_uint8_segments(data_list: List[np.ndarray]) -> Tuple[np.ndarray, np.nda
 
 
 def unpack_uint8_segments(flat_data: np.ndarray, end_indices: np.ndarray) -> List[np.ndarray]:
-    """
-    Recovers original list of uint8 segments from a flat array and end indices.
-
-    Args:
-        flat_data (np.ndarray): Flat array of concatenated data (dtype=uint8).
-        end_indices (np.ndarray): Array of inclusive end indices (dtype=int64).
-
-    Returns:
-        List[np.ndarray]: Reconstructed list of original segments (dtype=uint8).
-    """
     if flat_data.dtype != np.uint8:
         raise ValueError("flat_data must be of dtype=uint8.")
     if end_indices.dtype != np.int64:
