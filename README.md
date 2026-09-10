@@ -33,10 +33,10 @@ By removing the data-sharing bottleneck, we believe Necoda will significantly ac
 
 ### Environment 
 
-* Ubuntu 20.04
-* Python 3.10.14
-* Pytorch 2.2.1
-* NVIDIA GPU (24 GB Memory) + CUDA
+* Ubuntu 22.04.5
+* Python 3.13.2
+* Pytorch 2.6.0 + CUDA 12.4
+* NVIDIA A100-SXM4 GPU (40 GB memory) 
 
 ### Code setup
 
@@ -44,12 +44,12 @@ By removing the data-sharing bottleneck, we believe Necoda will significantly ac
 * Create a virtual environment and install Pytorch. Please select the correct Pytorch version that matches your CUDA version at https://pytorch.org/get-started/previous-versions/.
 
 ```
-$ conda create -n necoda python=3.10
-$ source activate necoda
-$ pip install torch==2.2.1 torchvision==0.17.1 torchaudio==2.2.1 --index-url https://download.pytorch.org/whl/cu121
+$ conda create -n necoda python=3.13
+$ conda activate necoda
+$ pip install torch==2.6.0+cu124 torchvision==0.21.0+cu124 pybind11 --extra-index-url https://download.pytorch.org/whl/cu124
 ```
 
-* Clone the environment here.
+* Clone the repository here.
 
 ```
 $ git clone git@github.com:TSuXinH/Necoda.git
@@ -59,36 +59,64 @@ $ cd Necoda
 * Install other necessary dependencies.
 
 ```
-$ pip install -r requirements.txt
+$ pip install --no-build-isolation -r requirements.txt
 ```
 
 
 ### Training
 
-For the dataset with a spatial shape of 512x512 and temporal shape of 6000, the following command can be used for standard training setup. This will generate quant.pth that can be further compressed via well-developed techniques like 7z. The detailed meaning of each argument can be found in the training script.
+For the dataset with a spatial shape of 512x512 and temporal shape of 6000, the following command can be used for standard training setup. This will generate entropy-coded bitstream files named `c_dict_<epoch>.pth`. The detailed meaning of each argument can be found in the training script.
 
-To speed up training, `traing_3stage.py` can be used to enable hierarchical training strategy.
+To speed up training, `train_2stages.py` can be used to enable two-stage training strategy.
 
 ABO datasets, as the training data, can be downloaded from https://drive.google.com/drive/folders/1bAsTiy0aMIoUEjw9QJhIm0PCqTSuXoR8.
 ```
-CUDA_VISIBLE_DEVICES=0 python train_huff.py --pre_norm mean_std --output_path {} --data_path {} \
-                    --act gelu --norm none --pre_s_rate 2 --pre_t_rate 2 --s_emb_dim 2 --t_emb_dim 2 \
-                    --s_s_rate_list 1 1 1 --t_s_rate_list 4 4 4 --s_t_rate_list 4 4 4 --t_t_rate_list 1 1 1 \
-                    --loss L2 --model_type nerp_st -e 100 --eval_freq 10 -b 2 --lr 2e-4 --overwrite \
-                    --chns_list 32 32 32 -g {} --quant_embed_bit 4  --interp_size_x 8 --interp_size_t 8 --remark {}
+CUDA_VISIBLE_DEVICES=0 python train.py --output_path {} --data_path {} \
+                    --pre_norm robust_min_max --rd_metric normalized-mse \
+                    --patch_x 128 --patch_t 128 --gap_x 64 --gap_t 64 \
+                    --interp_size_x 4 --interp_size_t 4 \
+                    --s_rate_list 1 1 1 --t_rate_list 2 2 2 --chns_list 32 32 32 \
+                    --lam 2.2 --lam_temporal 0.35 --temporal_channels 8 \
+                    -e 100 -b 2 -j 2 --lr 2e-4 --eval_freq 10 --overwrite \
+                    -g {} --remark {}
 ``` 
 
 ### Inference
-The following command can be used to decompress the latents with the trained network.
+The following command can be used to decompress the bitstreams with the trained network.
 ```
-CUDA_VISIBLE_DEVICES=0 python recon_nerp_st_huff.py -d {} -e {} --name recon_{} -g {}
+CUDA_VISIBLE_DEVICES=0 python recon.py -d {} -e {} --name recon_{} -g {}
 ```
 
 Please refer to the py files with prefix **cmd** (command) for more details or use them directly.
 
 ### Optional
 
-The nwb extension for Necoda and 7z compression are further provided in scripts `necoda_nwb_encode_ABO.py` and `necoda_nwb_encode_ABO.py`.
+The nwb extension for Necoda and 7z compression is further provided in scripts `necoda_nwb_encode_ABO.py` and `necoda_nwb_decode_ABO.py`.
+
+```
+python necoda_nwb_encode_ABO.py --name {} --base-path {} --epoch {} \
+                               --embedding-number {} --original-data-size {} \
+                               --output-dir {}
+
+python necoda_nwb_decode_ABO.py --nwb-path {} --name {} --output-dir {}
+```
+
+`--embedding-number` is the number of streams (`g1`, `g2`, ...) to archive, and `--original-data-size` is their total uncompressed size in bytes.
+
+The TensorRT support is provided in scripts `encode_tensorrt.py` and `decode_tensorrt.py` for faster compression and decompression after model deployment.
+
+```
+CUDA_VISIBLE_DEVICES=0 python encode_tensorrt.py --experiment {} --epoch {} \
+                    --input-tiff {} --stream-output {} --engine-dir ./tensorrt_engines \
+                    --precision amp --batch-size 8 --entropy-workers 8 \
+                    --loader-workers 8 --overwrite
+
+CUDA_VISIBLE_DEVICES=0 python decode_tensorrt.py --experiment {} --epoch {} \
+                    --stream-input {} --output-tiff {} --engine-dir ./tensorrt_engines \
+                    --precision amp --batch-size 8 --entropy-workers 8 --overwrite
+```
+
+The required TensorRT engines are built and cached in `--engine-dir` on first use. Use the same directory for subsequent compression and decompression.
 
 
 ## Results
